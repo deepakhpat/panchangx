@@ -497,52 +497,62 @@ function getForecastWeatherForDate(dateStr) {
 }
 
 function getAgricultureGuidance(record, weather) {
+    const adviceItems = [];
+
     if (!weather) {
-        const basedOnVahan = record.vahan_rain !== 'लागू नाही' ? `वाहनानुसार ${record.vahan_rain} अंदाज आहे.` : 'वाहन माहिती उपलब्ध नाही.';
-        return `हवामान अंदाज उपलब्ध नाही. ${basedOnVahan}`;
+        adviceItems.push({
+            icon: '🌙',
+            label: 'पंचांग',
+            text: record.vahan_rain !== 'लागू नाही' ? `वाहनानुसार ${record.vahan_rain} अंदाज आहे.` : 'वाहन माहिती उपलब्ध नाही.'
+        });
+        adviceItems.push({
+            icon: '🌦️',
+            label: 'हवामान',
+            text: 'हवामान अंदाज उपलब्ध नाही.'
+        });
+        return adviceItems;
     }
 
-    const suggestions = [];
     const avgTemp = weather.tempAvg;
     const rainProb = weather.rainProbability;
     const code = weather.weatherCode;
     const vahanRisk = RAIN_INTENSITIES[record.vahan_rain] || 'none';
 
     if (rainProb >= 70) {
-        suggestions.push('उच्च पाऊस जोखीम; निचरा व्यवस्थित करा आणि जमीन पाण्याची साचू नये याची काळजी घ्या.');
+        adviceItems.push({ icon: '🌧️', label: 'पाऊस', text: 'उच्च पाऊस जोखीम; निचरा व्यवस्थित करा आणि जमीन पाण्याची साचू नये याची काळजी घ्या.' });
         if (avgTemp >= 22 && avgTemp <= 30) {
-            suggestions.push('उत्सर्जित दमटताामुळे फवारणी व पाणीजन्य रोगाचा धोका आहे. पिकाची निरीक्षण करा.');
+            adviceItems.push({ icon: '🦠', label: 'रोग', text: 'उत्सर्जित दमटताामुळे फवारणी व पाणीजन्य रोगाचा धोका आहे. पिकाची निरीक्षण करा.' });
         }
         if (avgTemp > 30) {
-            suggestions.push('उच्च तापमान व जास्त पाऊसामुळे तणाव-रोगाचा धोका वाढतो. रोगनियंत्रणासाठी नियमित निरीक्षण आवश्यक.');
+            adviceItems.push({ icon: '⚠️', label: 'तापमान', text: 'उच्च तापमान व जास्त पाऊसामुळे तणाव-रोगाचा धोका वाढतो. रोगनियंत्रणासाठी नियमित निरीक्षण आवश्यक.' });
         }
     }
 
     if (rainProb <= 20) {
         if (avgTemp >= 34) {
-            suggestions.push('उच्च तापमान आणि कमी पाऊस; दुष्काळाचा ताण आणि कीटकाचा धोका वाढतो. सिंचन व माती ओलावा सुनिश्चित करा.');
+            adviceItems.push({ icon: '☀️', label: 'शुष्क', text: 'उच्च तापमान आणि कमी पाऊस; दुष्काळाचा ताण आणि कीटकाचा धोका वाढतो. सिंचन व माती ओलावा सुनिश्चित करा.' });
         } else {
-            suggestions.push('कमी पाऊस; पीकांचे प्रतिकारशक्ति वाढवण्यासाठी मलजल वितरण आणि मातीचा आर्द्रता नियंत्रण करावे.');
+            adviceItems.push({ icon: '💧', label: 'ओलावा', text: 'कमी पाऊस; पीकांचे प्रतिकारशक्ति वाढवण्यासाठी मलजल वितरण आणि मातीचा आर्द्रता नियंत्रण करावे.' });
         }
     }
 
     if (code === 82 || code === 95 || code === 96 || code === 99) {
-        suggestions.push('वादळी पावसाची शक्यता आहे; पिकांचे संरक्षण आणि हस्तगत उत्पादने सुरक्षित ठेवा.');
+        adviceItems.push({ icon: '⛈️', label: 'वादळ', text: 'वादळी पावसाची शक्यता आहे; पिकांचे संरक्षण आणि हस्तगत उत्पादने सुरक्षित ठेवा.' });
     }
 
     if (vahanRisk === 'heavy') {
-        suggestions.push('परंपरागत वाहनानुसार मुसळधार पाऊस अपेक्षित आहे; पिकांच्या संरक्षणासाठी त्वरित तयारी करा.');
+        adviceItems.push({ icon: '🌙', label: 'पंचांग', text: 'परंपरागत वाहनानुसार मुसळधार पाऊस अपेक्षित आहे; पिकांच्या संरक्षणासाठी त्वरित तयारी करा.' });
     }
 
     if (vahanRisk === 'low' || vahanRisk === 'scant') {
-        suggestions.push('पिकांमध्ये कोरडेपणा किंवा कीटकाचा धोका असू शकतो; कीटक नियंत्रण आणि सिंचन योग्य ठिकाणी ठेवा.');
+        adviceItems.push({ icon: '🐛', label: 'कीटक', text: 'पिकांमध्ये कोरडेपणा किंवा कीटकाचा धोका असू शकतो; कीटक नियंत्रण आणि सिंचन योग्य ठिकाणी ठेवा.' });
     }
 
-    if (suggestions.length === 0) {
-        suggestions.push('सामान्य हवामान स्थिती; नियमित निरीक्षण आणि पाण्याचे संतुलन राखा.');
+    if (adviceItems.length === 0) {
+        adviceItems.push({ icon: '🌿', label: 'सामान्य', text: 'सामान्य हवामान स्थिती; नियमित निरीक्षण आणि पाण्याचे संतुलन राखा.' });
     }
 
-    return suggestions.join(' ');
+    return adviceItems;
 }
 
 function renderForecastTable() {
@@ -591,7 +601,32 @@ function renderForecastTable() {
         tdVahan.innerHTML = `${VAHAN_EMOJIS[record.vahan] || '🚫'} ${record.vahan}<br>${record.vahan_rain}`;
 
         const tdAdvice = document.createElement('td');
-        tdAdvice.textContent = guidance;
+        let adviceHtml = '';
+
+        if (Array.isArray(guidance)) {
+            adviceHtml = guidance.map(item => `
+                <div class="advice-line">
+                    <span class="advice-icon">${item.icon}</span>
+                    <span class="advice-label">${item.label}</span>
+                    <span class="advice-text">${item.text}</span>
+                </div>
+            `).join('');
+        } else if (typeof guidance === 'string') {
+            const lines = guidance.split('<br>');
+            adviceHtml = lines.map((line, index) => {
+                const icon = index === 0 ? '🌙' : '🌦️';
+                const label = index === 0 ? 'पंचांग' : 'हवामान';
+                return `
+                    <div class="advice-line">
+                        <span class="advice-icon">${icon}</span>
+                        <span class="advice-label">${label}</span>
+                        <span class="advice-text">${line.trim()}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        tdAdvice.innerHTML = adviceHtml;
 
         row.appendChild(tdDate);
         row.appendChild(tdTithi);
@@ -701,14 +736,20 @@ function renderWeatherAndAdvisory() {
     // 1. High Rain warnings
     if (rainProb >= 60 || rainLevelType === 'heavy') {
         suggestions.push({
+            icon: '🌧️',
+            label: 'पाऊस',
             text: "शेतात अतिरिक्त पाणी साचून राहू नये म्हणून पाण्याचा निचरा होण्यासाठी तातडीने चर खोदावेत (Drain excess water).",
             warn: true
         });
         suggestions.push({
+            icon: '🧪',
+            label: 'फवारणी',
             text: "कीटकनाशकांची फवारणी किंवा खते देण्याची कामे तूर्तास पुढे ढकलावीत, अन्यथा पावसामुळे ते वाहून जाईल (Postpone chemical sprays).",
             warn: true
         });
         suggestions.push({
+            icon: '🌾',
+            label: 'पीक',
             text: "कापणी केलेले पीक सुरक्षित जागेवर हलवावे किंवा प्लॅस्टिक कागदाने झाकून ठेवावे (Protect harvested crops).",
             warn: true
         });
@@ -717,14 +758,20 @@ function renderWeatherAndAdvisory() {
     // 2. Light to Medium Rain
     if ((rainProb > 20 && rainProb < 60) || rainLevelType === 'medium') {
         suggestions.push({
+            icon: '🌱',
+            label: 'पेरणी',
             text: "पेरणीपूर्व मशागत किंवा पेरणीसाठी अनुकूल काळ आहे. वाफसा तपासूनच बियाणे पेरावे (Suitable for sowing).",
             warn: false
         });
         suggestions.push({
+            icon: '🪴',
+            label: 'मशागत',
             text: "उगवून आलेल्या कोवळ्या पिकांची आंतरमशागत (कोळपणी/खुरपणी) करावी (Intercultivation/Weeding).",
             warn: false
         });
         suggestions.push({
+            icon: '🦠',
+            label: 'रोग',
             text: "हवेत दमटपणा वाढल्याने पिकांवर बुरशीजन्य रोगांचा प्रादुर्भाव होऊ शकतो, पानांचे निरीक्षण करावे (Watch for fungal diseases).",
             warn: true
         });
@@ -733,14 +780,20 @@ function renderWeatherAndAdvisory() {
     // 3. Dry Spell / Low Rain
     if (rainProb <= 20 || rainLevelType === 'scant' || rainLevelType === 'low') {
         suggestions.push({
+            icon: '💧',
+            label: 'सिंचन',
             text: "पावसाची ओढ असल्याने उपलब्ध पाण्याचे नियोजन करा. तुषार (Sprinkler) किंवा ठिबक (Drip) सिंचन पद्धतीचा वापर करावा (Use drip/sprinkler).",
             warn: false
         });
         suggestions.push({
+            icon: '🐛',
+            label: 'कीटक',
             text: "कोरड्या हवेमुळे पिकांवर रसशोषक किडींचा (मावा, तुडतुडे, फुलकिडे) प्रादुर्भाव वाढण्याची दाट शक्यता आहे. कामगंध सापळे लावावेत (Watch for sucking pests).",
             warn: true
         });
         suggestions.push({
+            icon: '🌿',
+            label: 'मल्च',
             text: "मातीमधील ओलावा टिकवून ठेवण्यासाठी सेंद्रिय पालापाचोळ्याचे अच्छादन (Mulching) करावे (Implement mulching).",
             warn: false
         });
@@ -749,11 +802,15 @@ function renderWeatherAndAdvisory() {
     // 4. Moon Nakshatra specific agricultural tips
     if (record.nak_name === "रोहिणी" || record.nak_name === "मृगशीर्ष") {
         suggestions.push({
+            icon: '🌙',
+            label: 'नक्षत्र',
             text: "खरीप हंगामाच्या पिकांसाठी (सोयाबीन, कापूस, बाजरी) गादीवाफ्यावर रोपवाटिका तयार करण्याची ही उत्तम वेळ आहे (Prepare Kharif nurseries).",
             warn: false
         });
     } else if (record.nak_name === "आर्द्रा" || record.nak_name === "पुनर्वसू") {
         suggestions.push({
+            icon: '🌾',
+            label: 'लागवड',
             text: "भात पुनर्लागवड (Rice transplanting) करण्यासाठी शेतात चिखल करून चोपण तयार ठेवावी.",
             warn: false
         });
@@ -762,10 +819,10 @@ function renderWeatherAndAdvisory() {
     // Render recommendations to DOM
     suggestions.forEach(s => {
         const li = document.createElement('li');
-        li.textContent = s.text;
         if (s.warn) {
             li.className = 'warning';
         }
+        li.innerHTML = `<span class="advice-icon">${s.icon}</span><span class="advice-text">${s.text}</span>`;
         recommendationsList.appendChild(li);
     });
 }
