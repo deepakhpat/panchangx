@@ -628,12 +628,12 @@ function renderForecastTable() {
 
         tdAdvice.innerHTML = adviceHtml;
 
-        row.appendChild(tdDate);
-        row.appendChild(tdTithi);
-        row.appendChild(tdSun);
-        row.appendChild(tdWeather);
-        row.appendChild(tdVahan);
-        row.appendChild(tdAdvice);
+row.appendChild(tdDate);
+row.appendChild(tdAdvice);
+row.appendChild(tdWeather);
+row.appendChild(tdVahan);
+row.appendChild(tdTithi);
+row.appendChild(tdSun);
 
         forecastTableBody.appendChild(row);
     }
