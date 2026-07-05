@@ -42,6 +42,8 @@ DISTRICTS = [
     {"id":"nanded",     "name_en":"Nanded",                    "name_mr":"नांदेड",             "lat":19.1383,"lon":77.3210},
     {"id":"ratnagiri",  "name_en":"Ratnagiri",                 "name_mr":"रत्नागिरी",          "lat":16.9902,"lon":73.3120},
     {"id":"amravati",   "name_en":"Amravati",                  "name_mr":"अमरावती",            "lat":20.9374,"lon":77.7796},
+    {"id":"raigad",     "name_en":"Raigad",                    "name_mr":"रायगड",              "lat":18.3699,"lon":73.2552},
+    {"id":"sindhudurg", "name_en":"Sindhudurg",                "name_mr":"सिंधुदुर्ग",          "lat":16.2141,"lon":73.5126},
 ]
 
 MONSOON_NAKS = [
