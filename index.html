@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="पंचांग कृषी मित्र - शेतकऱ्यांसाठी पारंपरिक नक्षत्र वाहन आणि आधुनिक हवामान अंदाज यांचा मिलाफ करणारा हायब्रीड कृषी सल्लागार.">
     <title>PanchangX</title>
-    <link rel="stylesheet" href="index.css?v=4">
+    <link rel="stylesheet" href="index.css?v=6">
 </head>
 <body>
     <!-- App Loading Screen -->
@@ -66,17 +66,21 @@
                 <div class="advisory-layout">
                     <!-- Modern weather metric strip -->
                     <div class="rain-forecast-grid">
-                        <div class="vahan-alert" id="vahan-alert-block" style="margin-bottom: 0; height: 100%;">
-                            <div class="vahan-avatar-ring" id="vahan-icon">🐘</div>
-                            <div class="vahan-text">
-                                <h4 id="vahan-title">हत्ती वाहन (मुसळधार पाऊस)</h4>
-                                <p id="vahan-description">पारंपरिक अंदाज: अतिवृष्टी, पूर परिस्थिती आणि नद्या ओसंडून वाहतील असा पाऊस.</p>
+                        <div class="rain-forecast-item">
+                            <h3>📜 पंचांग अंदाज</h3>
+                            <div class="forecast-card" id="vahan-alert-block">
+                                <div class="forecast-icon" id="vahan-icon">🐘</div>
+                                <h4 class="forecast-title" id="vahan-title">हत्ती वाहन (मुसळधार पाऊस)</h4>
+                                <p class="forecast-desc" id="vahan-description">पारंपरिक अंदाज: अतिवृष्टी, पूर परिस्थिती आणि नद्या ओसंडून वाहतील असा पाऊस.</p>
                             </div>
                         </div>
-                        <div class="weather-metric" style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
-                            <i class="v-icon">🌧️</i>
-                            <span class="metric-val" id="weather-rain-prob">-%</span>
-                            <span class="metric-lbl">पाऊस शक्यता</span>
+                        <div class="rain-forecast-item">
+                            <h3>🌦️ हवामान खाते अंदाज</h3>
+                            <div class="forecast-card">
+                                <div class="forecast-icon">🌧️</div>
+                                <h4 class="forecast-title" id="weather-rain-prob">-%</h4>
+                                <p class="forecast-desc" id="weather-forecast-text">हवामान अंदाज लोड होत आहे...</p>
+                            </div>
                         </div>
                     </div>
 
@@ -286,7 +290,7 @@
     </div>
 
     <!-- App Logic -->
-    <script src="app.js?v=4"></script>
+    <script src="app.js?v=6"></script>
     <script>
         const burgerMenu = document.getElementById('burger-menu');
         const navLinks = document.getElementById('nav-links');

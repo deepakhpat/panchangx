@@ -37,6 +37,7 @@ const weatherTemp = document.getElementById('weather-temp');
 const weatherRainProb = document.getElementById('weather-rain-prob');
 const weatherHumidity = document.getElementById('weather-humidity');
 const weatherWind = document.getElementById('weather-wind');
+const weatherForecastText = document.getElementById('weather-forecast-text');
 const advisoryDate = document.getElementById('advisory-date');
 
 // Advisory Elements
@@ -699,9 +700,12 @@ function renderWeatherAndAdvisory() {
     // Display weather metrics
     const wConfig = WEATHER_CODES[weatherCode] || { desc: "कोरडे हवामान", emoji: "☀️" };
     weatherTemp.innerHTML = `${wConfig.emoji} ${temp}°C <span style="font-size:0.75rem; display:block; font-weight:normal;">(${wConfig.desc})</span>`;
-    weatherRainProb.textContent = `${rainProb}%`;
-    weatherHumidity.textContent = isNaN(humidity) ? humidity : `${humidity}%`;
-    weatherWind.textContent = isNaN(wind) ? `${wind} km/h` : `${wind} km/h`;
+    if (weatherRainProb) weatherRainProb.textContent = `${rainProb}%`;
+    if (weatherForecastText) {
+        weatherForecastText.textContent = `${wConfig.emoji} ${wConfig.desc} | तापमान: ${temp}°C | पाऊस शक्यता: ${rainProb}%`;
+    }
+    if (weatherHumidity) weatherHumidity.textContent = isNaN(humidity) ? humidity : `${humidity}%`;
+    if (weatherWind) weatherWind.textContent = isNaN(wind) ? `${wind} km/h` : `${wind} km/h`;
 
     if (!weatherData) {
         const fallback = document.createElement('li');
